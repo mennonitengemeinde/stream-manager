@@ -10,7 +10,7 @@ function setOffline(data) {
 }
 
 function setScene(data) {
-    console.log(data)
+    console.log(data);
     const title = document.getElementById('title');
     const timer = document.getElementById('timer');
 
@@ -22,8 +22,12 @@ function setScene(data) {
         title.innerText = data.status.toUpperCase();
         timer.innerText = '';
         changeBackground('white-background');
-    } 
-    else if (data.status === 'preacher') {
+    } else if (data.status === 'piano') {
+        clearInterval(countdown);
+        title.innerText = data.status.toUpperCase();
+        timer.innerText = '';
+        changeBackground('red-background');
+    } else if (data.status === 'preacher') {
         clearInterval(countdown);
         dirrection = 'desc';
         title.innerText = data.status.toUpperCase();
@@ -45,7 +49,6 @@ function setScene(data) {
             } else if (dirrection === 'asc') {
                 seconds = seconds + 1;
             }
-            
         }, 1000);
         changeBackground('black-background');
     }

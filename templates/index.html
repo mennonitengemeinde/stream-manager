@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream Monitor</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Stream Monitor</title>
 
-    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
 
-    <link rel="stylesheet" href="/static/css/monitor.css">
-    <link rel="stylesheet" href="/static/css/background-colors.css">
-</head>
-<body>
-    <section id="timer-container">
-        <div id="timer"></div>
-    </section>
+        <link rel="stylesheet" href="/static/css/monitor.css" />
+        <link rel="stylesheet" href="/static/css/background-colors.css" />
+    </head>
+    <body>
+        <section id="timer-container">
+            <div id="timer"></div>
+        </section>
 
-    <section id="title-container">
-        <div id="title">Preacher</div>
-    </section>
+        <section id="title-container">
+            <div id="title">Preacher</div>
+        </section>
 
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/static/js/monitor.js"></script>
+        <script>
+            const socket = io.connect('http://localhost:3000');
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/static/js/monitor.js"></script>
-    <script>
-        const socket = io.connect('http://localhost:3000');
+            socket.on('current-status', function (data) {
+                setScene(data);
+            });
 
-        socket.on('current-status', function(data) {
-            setScene(data);
-        });
-
-        socket.on('scene', function(data) {
-            setScene(data);
-        });
-    </script>
-</body>
+            socket.on('scene', function (data) {
+                console.log(`Change scene to ${data}`);
+                setScene(data);
+            });
+        </script>
+    </body>
 </html>
