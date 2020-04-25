@@ -29,8 +29,22 @@
             });
 
             socket.on('scene', function (data) {
-                console.log(`Change scene to ${data}`);
                 setScene(data);
+            });
+
+            socket.on('timer', function (data) {
+                const timerDiv = document.getElementById('timer');
+                const timerClasses = timerDiv.className;
+                if (data.timerOrder === 'desc') {
+                    if (timerClasses === 'red-text') {
+                        timerDiv.className = '';
+                    }
+                } else if (data.timerOrder === 'asc') {
+                    if (timerClasses !== 'red-text') {
+                        timerDiv.className = 'red-text';
+                    }
+                }
+                timerDiv.innerText = `${data.minutes.toString()}:${data.seconds.toString()}`;
             });
         </script>
     </body>

@@ -1,4 +1,4 @@
-let countdown;
+// let countdown;
 
 function setOffline(data) {
     const title = document.getElementById('title');
@@ -10,47 +10,48 @@ function setOffline(data) {
 }
 
 function setScene(data) {
-    console.log(data);
+    // console.log(data);
     const title = document.getElementById('title');
     const timer = document.getElementById('timer');
 
-    let seconds;
-    let dirrection;
+    // let seconds;
+    // let dirrection;
 
     if (data.status === 'offline') {
-        clearInterval(countdown);
+        // clearInterval(countdown);
         title.innerText = data.status.toUpperCase();
         timer.innerText = '';
         changeBackground('white-background');
     } else if (data.status === 'piano') {
-        clearInterval(countdown);
+        // clearInterval(countdown);
         title.innerText = data.status.toUpperCase();
         timer.innerText = '';
         changeBackground('red-background');
     } else if (data.status === 'preacher') {
-        clearInterval(countdown);
-        dirrection = 'desc';
+        // clearInterval(countdown);
+        // dirrection = 'desc';
         title.innerText = data.status.toUpperCase();
-        seconds = Number(data.minutes) * 60;
+        // seconds = Number(data.minutes) * 60;
 
-        countdown = setInterval(function () {
-            let clockMinutes = Math.floor(Number(seconds) / 60);
-            let clockSeconds = Number(seconds) % 60;
-            let clockZero = clockSeconds < 10 ? '0' : '';
-            timer.innerText = `${clockMinutes}:${clockZero}${clockSeconds}`;
+        // countdown = setInterval(function () {
+        //     let clockMinutes = Math.floor(Number(seconds) / 60);
+        //     let clockSeconds = Number(seconds) % 60;
+        //     let clockZero = clockSeconds < 10 ? '0' : '';
+        //     timer.innerText = `${clockMinutes}:${clockZero}${clockSeconds}`;
 
-            if (seconds === 0) {
-                dirrection = 'asc';
-                timer.classList.add('red-text');
-            }
+        //     if (seconds === 0) {
+        //         dirrection = 'asc';
+        //         timer.classList.add('red-text');
+        //     }
 
-            if (dirrection === 'desc') {
-                seconds = seconds - 1;
-            } else if (dirrection === 'asc') {
-                seconds = seconds + 1;
-            }
-        }, 1000);
+        //     if (dirrection === 'desc') {
+        //         seconds = seconds - 1;
+        //     } else if (dirrection === 'asc') {
+        //         seconds = seconds + 1;
+        //     }
+        // }, 1000);
         changeBackground('black-background');
+
     }
 }
 

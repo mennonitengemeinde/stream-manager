@@ -6,8 +6,12 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 const { getCurrentStatus, setCurrentStatus } = require('./services/status');
-const { getCountdownMinutes, setCountdownMinutes } = require('./services/countdown');
+const { getCountdownSeconds, setCountdownSeconds } = require('./services/countdown');
 const { STATUS } = require('./services/const');
+
+let timer;
+let timerStarted = false;
+let timerOrder = 'desc';
 
 app.use(morgan('tiny'));
 app.use(express.static(__dirname + '/node_modules'));
@@ -31,6 +35,8 @@ app.get('/api/v1/obs/offline', (req, res, next) => {
         status: setCurrentStatus(STATUS.OFFLINE)
     };
 
+    stopTimer();
+
     io.sockets.emit('scene', data)
     res.json(data);
 });
@@ -41,18 +47,22 @@ app.get('/api/v1/obs/piano', (req, res, next) => {
         status: setCurrentStatus(STATUS.PIANO)
     };
 
+    stopTimer();
+
     io.sockets.emit('scene', data)
     res.json(data);
 });
 
 // GET '/api/v1/obs/preacher
 app.get('/api/v1/obs/preacher/:minutes', (req, res, next) => {
+    stopTimer();
     const data = {
         status: setCurrentStatus(STATUS.PREACHER),
         minutes: req.params.minutes
     };
 
-    setCountdownMinutes(Number(req.params.minutes));
+    setCountdownSeconds(Number(req.params.minutes) * 60);
+    startTimer();
 
     io.sockets.emit('scene', data)
     res.json(data);
@@ -68,11 +78,46 @@ io.on('connection', function (client) {
     data.status = getCurrentStatus();
 
     if (data.status === STATUS.PREACHER) {
-        data.minutes = getCountdownMinutes();
-        console.log(`${data.minutes} Minutes`);
+        data.minutes = getCountdownSeconds();
     }
 
     client.emit('current-status', data);
 });
+
+// --------------------------- Timer ---------------------------
+
+const startTimer = () => {
+    timer = setInterval(function () {
+        timerStarted = true;
+        const seconds = getCountdownSeconds();
+        if (seconds === 0) {
+            timerOrder = 'asc';
+        }
+
+        if (timerOrder === 'desc') {
+            setCountdownSeconds(seconds - 1);
+        } else if (timerOrder === 'asc') {
+            setCountdownSeconds(seconds + 1);
+        }
+
+        const secondsString = seconds % 60;
+        const zeroSeconds = secondsString < 10 ? '0' : '';
+
+        const data = {
+            minutes: Math.floor(seconds / 60),
+            seconds: `${zeroSeconds}${secondsString}`,
+            timerOrder: timerOrder
+        }
+        
+        io.sockets.emit('timer', data);
+    }, 1000);
+};
+
+const stopTimer = () => {
+    clearInterval(timer);
+    timerOrder = 'desc';
+    timerStarted = false;
+};
+
 
 server.listen(3000);

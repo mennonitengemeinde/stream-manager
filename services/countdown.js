@@ -1,15 +1,17 @@
-let _countdownMinutes = 30;
+let _countdownSeconds = 0;
 
-const getCountdownMinutes = () => {
-    return _countdownMinutes;
+const getCountdownSeconds = () => {
+    return _countdownSeconds;
 };
 
-const setCountdownMinutes = (minutes) => {
-    _countdownMinutes = minutes;
-    return _countdownMinutes;
+const setCountdownSeconds = (seconds) => {
+    _countdownSeconds = Number(seconds);
+    return _countdownSeconds;
 };
+
+
 
 module.exports = {
-    getCountdownMinutes,
-    setCountdownMinutes
+    getCountdownSeconds,
+    setCountdownSeconds
 };
